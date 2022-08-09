@@ -60,7 +60,6 @@ jobs:
         run: |
           zip -r build.zip ./build
           zip -r coverage.zip ./coverage
-          ls
       - name: Log working directory
         run: |
           pwd
