@@ -61,6 +61,10 @@ jobs:
           zip -r build.zip ./build
           zip -r coverage.zip ./coverage
           ls
+      - name: Log working directory
+        run: |
+          pwd
+          ls
       - name: Create release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
