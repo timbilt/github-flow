@@ -41,7 +41,7 @@ jobs:
         env:
           CI: true
         run: yarn test -- --coverage
-      - name: Upload test coverage
+      - name: Upload test coverage to workflow page
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage
@@ -49,7 +49,7 @@ jobs:
       - name: Build Project
         if: github.event_name == 'push'
         run: yarn build
-      - name: Upload build folder
+      - name: Upload build folder to workflow page
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v3
         with:
@@ -75,3 +75,8 @@ jobs:
       - name: Deploy to Production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx surge --project ./build --domain cloistered-beef.surge.sh
+      - name: Upload Coverage reports
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
