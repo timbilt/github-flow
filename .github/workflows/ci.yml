@@ -1,7 +1,9 @@
 name: CI
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop] # when a PR into develop is created
+  push:
+    branches: [develop] # when a PR into develop is merged
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,3 +22,12 @@ jobs:
         env:
           CI: true
         run: yarn test -- --coverage
+      - name: Build Project
+        if: github.event_name == 'push'
+        run: yarn build
+      - name: Deploy to Staging
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        if: github.event_name == 'push'
+        run: npx surge --project ./build --domain upset-jump.surge.sh
